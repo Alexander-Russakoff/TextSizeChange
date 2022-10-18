@@ -6,10 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 
 class TextFragment : Fragment() {
 
     private lateinit var textView: TextView
+    private lateinit var textSizeViewModel: TextSizeViewModel
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        textSizeViewModel = ViewModelProvider(requireActivity())[(TextSizeViewModel::class.java)]
+
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -19,6 +29,15 @@ class TextFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_text, container, false).apply {
             textView = findViewById(R.id.textView)
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        textSizeViewModel.getTextSize().observe(requireActivity()){
+            val floater = it.toFloat()
+            changeTextSize(floater)
+        }
+
     }
 
     fun changeTextSize (size: Float) {
